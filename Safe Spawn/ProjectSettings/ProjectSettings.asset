@@ -8,7 +8,7 @@ PlayerSettings:
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 3
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
@@ -70,7 +70,6 @@ PlayerSettings:
   androidStartInFullscreen: 1
   androidRenderOutsideSafeArea: 1
   androidUseSwappy: 1
-  androidDisplayOptions: 1
   androidBlitType: 0
   androidResizeableActivity: 1
   androidDefaultWindowWidth: 1920
@@ -166,6 +165,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
+    Android: com.DefaultCompany.SafeSpawn
     Standalone: com.DefaultCompany.2D-URP
   buildNumber:
     Standalone: 0
@@ -407,7 +407,10 @@ PlayerSettings:
   m_BuildTargetGroupLightmapSettings: []
   m_BuildTargetGroupLoadStoreDebugModeSettings: []
   m_BuildTargetNormalMapEncoding: []
-  m_BuildTargetDefaultTextureCompressionFormat: []
+  m_BuildTargetDefaultTextureCompressionFormat:
+  - serializedVersion: 3
+    m_BuildTarget: Android
+    m_Formats: 01000000
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
@@ -770,7 +773,7 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 1
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
   cloudProjectId: 6438ffc8-a428-47b0-a369-2a3734d8e009
   framebufferDepthMemorylessMode: 0
@@ -786,4 +789,3 @@ PlayerSettings:
   androidVulkanDenyFilterList: []
   androidVulkanAllowFilterList: []
   androidVulkanDeviceFilterListAsset: {fileID: 0}
-  d3d12DeviceFilterListAsset: {fileID: 0}
