@@ -47,6 +47,7 @@ public class ProfileMenu : MonoBehaviour
         {
             signInButton.gameObject.SetActive(false);
             signUpButton.gameObject.SetActive(false);
+            logoutButton.gameObject.SetActive(true);
             welcomeText.gameObject.SetActive(true);
             welcomeText.text = $"Welcome, {playerName}!";
         }
@@ -55,6 +56,7 @@ public class ProfileMenu : MonoBehaviour
             signInButton.gameObject.SetActive(true);
             signUpButton.gameObject.SetActive(true);
             welcomeText.gameObject.SetActive(false);
+            logoutButton.gameObject.SetActive(false);
         }
     }
 }
