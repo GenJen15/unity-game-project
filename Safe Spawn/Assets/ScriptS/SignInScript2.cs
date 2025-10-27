@@ -1,7 +1,6 @@
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
-using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -25,7 +24,6 @@ public class SignInScript2 : MonoBehaviour
         string email = emailInput.text.Trim();
         string password = passwordInput.text;
 
-        // Validation
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
             feedbackText.text = "Please fill in all fields.";
@@ -38,6 +36,8 @@ public class SignInScript2 : MonoBehaviour
             return;
         }
 
+        feedbackText.text = "Logging in...";
+
         var request = new LoginWithEmailAddressRequest
         {
             Email = email,
@@ -46,36 +46,47 @@ public class SignInScript2 : MonoBehaviour
             {
                 GetPlayerProfile = true
             }
-
         };
 
-        feedbackText.text = "Logging in...";
         PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnLoginFailure);
     }
 
     void OnLoginSuccess(LoginResult result)
     {
-        feedbackText.text = "Login successful!";
-        Debug.Log("Logged in successfully as: " + emailInput.text);
+        string email = emailInput.text;
+        string displayName;
 
-        ResetLoginForm();
+        if (result.InfoResultPayload?.PlayerProfile?.DisplayName != null)
+            displayName = result.InfoResultPayload.PlayerProfile.DisplayName;
+        else
+            displayName = email.Split('@')[0];
 
-        PlayerPrefs.SetString("LoggedInEmail", emailInput.text);
+        // Save session
+        SessionManager.PlayerName = displayName;
+        SessionManager.PlayerEmail = email;
+
+        // Save locally for next session
+        PlayerPrefs.SetString("LoggedInEmail", email);
+        PlayerPrefs.SetString("LoggedInName", displayName);
         PlayerPrefs.Save();
 
-        if(result.InfoResultPayload.PlayerProfile != null)
+        // Optional: update PlayFab display name
+        if (result.InfoResultPayload?.PlayerProfile?.DisplayName == null)
         {
-            name = result.InfoResultPayload.PlayerProfile.DisplayName;
+            PlayFabClientAPI.UpdateUserTitleDisplayName(
+                new UpdateUserTitleDisplayNameRequest { DisplayName = displayName },
+                r => Debug.Log("Display name set!"),
+                e => Debug.LogWarning("Could not set display name: " + e.GenerateErrorReport())
+            );
         }
-            
-        if(name != null)
-        {
-            // to be continued
-        }
-        Invoke(nameof(GoToMainMenu), 1f);
+
+        feedbackText.text = "Login successful!";
+        emailInput.text = "";
+        passwordInput.text = "";
+
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 
-    // Failure
     void OnLoginFailure(PlayFabError error)
     {
         switch (error.Error)
@@ -94,20 +105,10 @@ public class SignInScript2 : MonoBehaviour
         Debug.LogError("Login failed: " + error.GenerateErrorReport());
     }
 
-    public void ResetLoginForm()
+    void OnEnable()
     {
         emailInput.text = "";
         passwordInput.text = "";
         feedbackText.text = "";
-    }
-
-    void GoToMainMenu()
-    {
-        SceneManager.LoadScene(mainMenuSceneName);
-    }
-
-    void OnEnable()
-    {
-        ResetLoginForm();
     }
 }

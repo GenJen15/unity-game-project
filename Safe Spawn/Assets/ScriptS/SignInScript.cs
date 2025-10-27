@@ -116,6 +116,33 @@ public class SignInScript : MonoBehaviour
     {
         feedbackText.text = "Welcome!";
         Debug.Log("User logged in successfully.");
+
+         // ✅ Set display name (using email prefix)
+        string email = emailInput.text.Trim();
+        string displayName = email.Split('@')[0];
+
+        PlayFabClientAPI.UpdateUserTitleDisplayName(new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = displayName
+        },
+        updateResult =>
+        {
+            Debug.Log("Display name set to: " + displayName);
+            PlayerPrefs.SetString("LoggedInEmail", email);
+            PlayerPrefs.SetString("LoggedInName", displayName);
+            PlayerPrefs.Save();
+
+            SceneManager.LoadScene(mainMenuSceneName);
+        },
+        error =>
+        {
+            Debug.LogWarning("Could not set display name: " + error.GenerateErrorReport());
+            PlayerPrefs.SetString("LoggedInEmail", email);
+            PlayerPrefs.SetString("LoggedInName", email);
+            PlayerPrefs.Save();
+
+            SceneManager.LoadScene(mainMenuSceneName);
+        });
     }
 
     void OnLoginFailure(PlayFabError error)

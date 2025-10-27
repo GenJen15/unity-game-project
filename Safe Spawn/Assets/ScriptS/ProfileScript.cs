@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class ProfileMenu : MonoBehaviour
 {
@@ -15,15 +17,33 @@ public class ProfileMenu : MonoBehaviour
 
     void Start()
     {
-        if (PlayerPrefs.HasKey("LoggedInEmail"))
+        // Check if there is a session first
+        if (!string.IsNullOrEmpty(SessionManager.PlayerEmail))
+        {
+            Login(SessionManager.PlayerName);
+        }
+        // Fallback to PlayerPrefs if session is empty
+        else if (PlayerPrefs.HasKey("LoggedInEmail"))
         {
             string email = PlayerPrefs.GetString("LoggedInEmail");
-            Login(email);
+            string name = PlayerPrefs.GetString("LoggedInName", email);
+
+            // You can check PlayFab session if needed
+            if (PlayFabClientAPI.IsClientLoggedIn())
+            {
+                Login(name);
+            }
+            else
+            {
+                SilentLogin(email, name);
+            }
         }
         else
         {
             Logout();
         }
+
+        UpdateUI();
     }
 
     public void Login(string username)
@@ -33,11 +53,25 @@ public class ProfileMenu : MonoBehaviour
         UpdateUI();
     }
 
+    void SilentLogin(string email, string name)
+    {
+        playerName = name;
+        isLoggedIn = true;
+        UpdateUI();
+    }
+
     public void Logout()
     {
         isLoggedIn = false;
         playerName = "";
+        SessionManager.PlayerName = "";
+        SessionManager.PlayerEmail = "";
+
         PlayerPrefs.DeleteKey("LoggedInEmail");
+        PlayerPrefs.DeleteKey("LoggedInName");
+        PlayerPrefs.Save();
+
+        PlayFabClientAPI.ForgetAllCredentials();
         UpdateUI();
     }
 
@@ -55,8 +89,8 @@ public class ProfileMenu : MonoBehaviour
         {
             signInButton.gameObject.SetActive(true);
             signUpButton.gameObject.SetActive(true);
-            welcomeText.gameObject.SetActive(false);
             logoutButton.gameObject.SetActive(false);
+            welcomeText.gameObject.SetActive(false);
         }
     }
 }
