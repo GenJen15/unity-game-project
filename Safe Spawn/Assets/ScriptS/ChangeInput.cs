@@ -1,51 +1,53 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using TMPro;
 
-public class ChangeInput : MonoBehaviour
+public class ChangeInputManager : MonoBehaviour
 {
-    EventSystem eventSystem;
-    public Selectable firstInput;
-    public Button submitButton;
+    [Header("UI References")]
+    [SerializeField] private Selectable firstInput;
+    [SerializeField] private Button submitButton;
 
-    void Start()
+    private EventSystem eventSystem;
+
+    private void Awake()
     {
         eventSystem = EventSystem.current;
+        firstInput?.Select();
     }
 
-    void Update()
+    private void Update()
     {
-        // TAB or SHIFT+TAB navigation
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (eventSystem.currentSelectedGameObject == null)
-            {
-                firstInput.Select();
-                return;
-            }
+        if (Keyboard.current == null) return; // No keyboard connected
+        var keyboard = Keyboard.current;
 
-            var current = eventSystem.currentSelectedGameObject.GetComponent<Selectable>();
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-            {
-                var previous = current.FindSelectableOnUp();
-                if (previous != null)
-                    previous.Select();
-            }
-            else
-            {
-                var next = current.FindSelectableOnDown();
-                if (next != null)
-                    next.Select();
-            }
-        }
+        if (keyboard.tabKey.wasPressedThisFrame)
+            NavigateTab(keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed);
 
-        // ENTER / RETURN to submit
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-                submitButton.onClick.Invoke();
-                Debug.Log("Submit button clicked via keyboard");
-        }
+        if ((keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame) && submitButton?.interactable == true)
+            submitButton.onClick.Invoke();
+    }
+
+    private void NavigateTab(bool shift)
+    {
+        var current = eventSystem.currentSelectedGameObject?.GetComponent<Selectable>() ?? firstInput;
+        if (current == null) return;
+
+        Selectable next = shift
+            ? current.FindSelectableOnUp() ?? GetLastSelectable()
+            : current.FindSelectableOnDown() ?? firstInput;
+
+        next?.Select();
+    }
+
+    private Selectable GetLastSelectable()
+    {
+        if (firstInput == null) return null;
+        var current = firstInput;
+        while (current.FindSelectableOnDown() != null)
+            current = current.FindSelectableOnDown();
+        return current;
     }
 }

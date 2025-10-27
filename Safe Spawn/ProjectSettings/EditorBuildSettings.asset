@@ -17,6 +17,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SignInScene.unity
     guid: f51b5923954d3f84398c461e2f30bb9d
+  - enabled: 1
+    path: Assets/Scenes/ProfileScene.unity
+    guid: f6a83cfc54d21084a87ad1467c6a0e1c
+  - enabled: 1
+    path: Assets/Scenes/ResultsScene.unity
+    guid: 5292a6b6d6535414e9e518bc28b2727d
+  - enabled: 1
+    path: Assets/Scenes/QuizScene.unity
+    guid: 27e9909c04cd3c949ab61bd051876a32
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

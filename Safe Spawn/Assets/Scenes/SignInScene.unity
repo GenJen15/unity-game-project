@@ -2243,6 +2243,7 @@ GameObject:
   - component: {fileID: 1953979246}
   - component: {fileID: 1953979245}
   - component: {fileID: 1953979244}
+  - component: {fileID: 1953979247}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -2314,22 +2315,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1870298599}
-        m_TargetAssemblyTypeName: SignInScript2, Assembly-CSharp
-        m_MethodName: OnBackButton
+      - m_Target: {fileID: 1953979247}
+        m_TargetAssemblyTypeName: GoProfileScene, Assembly-CSharp
+        m_MethodName: OnProfileButton
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 906428361}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2376,6 +2365,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1953979242}
   m_CullTransparentMesh: 1
+--- !u!114 &1953979247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953979242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b5708c18856f524cb26480a1509ad93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoProfileScene
+  nextSceneName: ProfileScene
 --- !u!1 &2029293555
 GameObject:
   m_ObjectHideFlags: 0
